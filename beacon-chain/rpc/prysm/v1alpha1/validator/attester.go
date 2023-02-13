@@ -167,18 +167,6 @@ func (vs *Server) ProposeAttestation(ctx context.Context, att *ethpb.Attestation
 	})
 
 	// Determine subnet to broadcast attestation to
-	wantedEpoch := slots.ToEpoch(att.Data.Slot)
-	vals, err := vs.HeadFetcher.HeadValidatorsIndices(ctx, wantedEpoch)
-	if err != nil {
-		return nil, err
-	}
-	subnet := helpers.ComputeSubnetFromCommitteeAndSlot(uint64(len(vals)), att.Data.CommitteeIndex, att.Data.Slot)
-
-	// Broadcast the new attestation to the network.
-	if err := vs.P2P.BroadcastAttestation(ctx, subnet, att); err != nil {
-		return nil, status.Errorf(codes.Internal, "Could not broadcast attestation: %v", err)
-	}
-
 	go func() {
 		ctx = trace.NewContext(context.Background(), trace.FromContext(ctx))
 		attCopy := ethpb.CopyAttestation(att)

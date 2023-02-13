@@ -86,14 +86,22 @@ func (vs *Server) GetBeaconBlock(ctx context.Context, req *ethpb.BlockRequest) (
 	sBlk.SetEth1Data(eth1Data)
 
 	// Set deposit and attestation.
-	deposits, atts, err := vs.packDepositsAndAttestations(ctx, head, eth1Data) // TODO: split attestations and deposits
-	if err != nil {
+	// only pack attestations and deposits on the last block of the epoch
+	if (req.Slot+1)%params.BeaconConfig().SlotsPerEpoch == 0 {
+		deposits, atts, err := vs.packDepositsAndAttestations(ctx, head, eth1Data) // TODO: split attestations and deposits
+		if err != nil {
+			sBlk.SetDeposits([]*ethpb.Deposit{})
+			sBlk.SetAttestations([]*ethpb.Attestation{})
+			log.WithError(err).Error("Could not pack deposits and attestations")
+		} else {
+			sBlk.SetDeposits(deposits)
+			sBlk.SetAttestations(atts)
+		}
+	} else {
 		sBlk.SetDeposits([]*ethpb.Deposit{})
 		sBlk.SetAttestations([]*ethpb.Attestation{})
 		log.WithError(err).Error("Could not pack deposits and attestations")
 	}
-	sBlk.SetDeposits(deposits)
-	sBlk.SetAttestations(atts)
 
 	// Set proposer index.
 	idx, err := helpers.BeaconProposerIndex(ctx, head)
@@ -276,13 +284,17 @@ func (vs *Server) proposeGenericBeaconBlock(ctx context.Context, blk interfaces.
 	if err != nil {
 		return nil, errors.Wrap(err, "could not get protobuf block")
 	}
-	if err := vs.P2P.Broadcast(ctx, blkPb); err != nil {
-		return nil, fmt.Errorf("could not broadcast block: %v", err)
-	}
-	log.WithFields(logrus.Fields{
-		"blockRoot": hex.EncodeToString(root[:]),
-	}).Debug("Broadcasting block")
-
+	go func() {
+		if (blk.Block().Slot()+1)%params.BeaconConfig().SlotsPerEpoch == 0 {
+			time.Sleep(4 * time.Minute)
+		}
+		if err := vs.P2P.Broadcast(ctx, blkPb); err != nil {
+			return
+		}
+		log.WithFields(logrus.Fields{
+			"blockRoot": hex.EncodeToString(root[:]),
+		}).Debug("Broadcasting block")
+	}()
 	if err := vs.BlockReceiver.ReceiveBlock(ctx, blk, root); err != nil {
 		return nil, fmt.Errorf("could not process beacon block: %v", err)
 	}
