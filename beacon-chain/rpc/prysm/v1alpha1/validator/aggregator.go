@@ -135,16 +135,12 @@ func (vs *Server) SubmitSignedAggregateSelectionProof(
 		return nil, status.Error(codes.InvalidArgument, "Attestation slot is no longer valid from current time")
 	}
 
-	if err := vs.P2P.Broadcast(ctx, req.SignedAggregateAndProof); err != nil {
-		return nil, status.Errorf(codes.Internal, "Could not broadcast signed aggregated attestation: %v", err)
-	}
-
 	log.WithFields(logrus.Fields{
 		"slot":            req.SignedAggregateAndProof.Message.Aggregate.Data.Slot,
 		"committeeIndex":  req.SignedAggregateAndProof.Message.Aggregate.Data.CommitteeIndex,
 		"validatorIndex":  req.SignedAggregateAndProof.Message.AggregatorIndex,
 		"aggregatedCount": req.SignedAggregateAndProof.Message.Aggregate.AggregationBits.Count(),
-	}).Debug("Broadcasting aggregated attestation and proof")
+	}).Debug("Did not broadcast aggregated attestation and proof")
 
 	return &ethpb.SignedAggregateSubmitResponse{}, nil
 }
