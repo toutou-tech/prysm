@@ -10,9 +10,9 @@ import (
 	reflect "reflect"
 	sync "sync"
 
-	github_com_prysmaticlabs_prysm_v3_consensus_types_primitives "github.com/prysmaticlabs/prysm/v3/consensus-types/primitives"
-	v1 "github.com/prysmaticlabs/prysm/v3/proto/engine/v1"
-	_ "github.com/prysmaticlabs/prysm/v3/proto/eth/ext"
+	github_com_prysmaticlabs_prysm_v3_consensus_types_primitives "github.com/prysmaticlabs/prysm/v4/consensus-types/primitives"
+	v1 "github.com/prysmaticlabs/prysm/v4/proto/engine/v1"
+	_ "github.com/prysmaticlabs/prysm/v4/proto/eth/ext"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
@@ -30,7 +30,7 @@ type BlobsSidecar struct {
 	unknownFields protoimpl.UnknownFields
 
 	BeaconBlockRoot []byte                                                            `protobuf:"bytes,1,opt,name=beacon_block_root,json=beaconBlockRoot,proto3" json:"beacon_block_root,omitempty" ssz-size:"32"`
-	BeaconBlockSlot github_com_prysmaticlabs_prysm_v3_consensus_types_primitives.Slot `protobuf:"varint,2,opt,name=beacon_block_slot,json=beaconBlockSlot,proto3" json:"beacon_block_slot,omitempty" cast-type:"github.com/prysmaticlabs/prysm/v3/consensus-types/primitives.Slot"`
+	BeaconBlockSlot github_com_prysmaticlabs_prysm_v3_consensus_types_primitives.Slot `protobuf:"varint,2,opt,name=beacon_block_slot,json=beaconBlockSlot,proto3" json:"beacon_block_slot,omitempty" cast-type:"github.com/prysmaticlabs/prysm/v4/consensus-types/primitives.Slot"`
 	Blobs           []*v1.Blob                                                        `protobuf:"bytes,3,rep,name=blobs,proto3" json:"blobs,omitempty" ssz-max:"16"`
 	AggregatedProof []byte                                                            `protobuf:"bytes,4,opt,name=aggregated_proof,json=aggregatedProof,proto3" json:"aggregated_proof,omitempty" ssz-size:"48"`
 }
