@@ -6,6 +6,7 @@ go_library(
         "batch_verifier.go",
         "block_batcher.go",
         "broadcast_bls_changes.go",
+        "builder_bid_subscriber.go",
         "context.go",
         "deadlines.go",
         "decode_pubsub.go",

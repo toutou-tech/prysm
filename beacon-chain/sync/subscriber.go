@@ -133,6 +133,15 @@ func (s *Service) registerSubscribers(epoch primitives.Epoch, digest [4]byte) {
 			digest,
 		)
 	}
+
+	if epoch >= params.BeaconConfig().EpbsForkEpoch {
+		s.subscribe(
+			p2p.BuilderBidSubnetTopicFormat,
+			s.validateBuilderBid,
+			s.builderBidSubscriber,
+			digest,
+		)
+	}
 }
 
 // subscribe to a given topic with a given validator and subscription handler.
