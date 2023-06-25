@@ -72,6 +72,14 @@ message Validator {
     uint64 withdrawable_epoch = 8 [(ethereum.eth.ext.cast_type) = "github.com/prysmaticlabs/prysm/v4/consensus-types/primitives.Epoch"];
 }
 
+// An Ethereum builder.
+message Builder {
+    bytes pubkey = 1 [(ethereum.eth.ext.ssz_size) = "48", (ethereum.eth.ext.spec_name) = "pubkey"];
+    bytes withdrawal_credentials = 2 [(ethereum.eth.ext.ssz_size) = "32"];
+    uint64 balance = 3;
+    bool slashed = 4;
+}
+
 enum ValidatorStatus {
     PENDING_INITIALIZED  = 0;
     PENDING_QUEUED = 1;
