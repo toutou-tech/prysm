@@ -28,6 +28,8 @@ const (
 	GossipContributionAndProofMessage = "sync_committee_contribution_and_proof"
 	// GossipBlsToExecutionChangeMessage is the name for the bls to execution change message type.
 	GossipBlsToExecutionChangeMessage = "bls_to_execution_change"
+	// BuilderBidMessage is the name for the builder bid message type.
+	BuilderBidMessage = "builder_bid"
 
 	// Topic Formats
 	//
@@ -49,4 +51,6 @@ const (
 	SyncContributionAndProofSubnetTopicFormat = GossipProtocolAndDigest + GossipContributionAndProofMessage
 	// BlsToExecutionChangeSubnetTopicFormat is the topic format for the bls to execution change subnet.
 	BlsToExecutionChangeSubnetTopicFormat = GossipProtocolAndDigest + GossipBlsToExecutionChangeMessage
+	// BuilderBidSubnetTopicFormat is the topic format for the builder bid subnet.
+	BuilderBidSubnetTopicFormat = GossipProtocolAndDigest + BuilderBidMessage
 )
