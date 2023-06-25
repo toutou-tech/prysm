@@ -121,6 +121,13 @@ ssz_gen_marshal(
         "SignedBLSToExecutionChange",
         "BuilderBid",
         "BuilderBidCapella",
+        "SignedBlindedBeaconBlockEPBS",
+        "BlindedBeaconBlockEPBS",
+        "BlindedBeaconBlockBodyEPBS",
+        "SignedBeaconBlockEPBS",
+        "BeaconBlockEPBS",
+        "BeaconBlockBodyEPBS",
+        "Builder",
     ],
 )
 
