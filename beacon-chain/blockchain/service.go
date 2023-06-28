@@ -12,6 +12,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/prysmaticlabs/prysm/v4/async/event"
+	"github.com/prysmaticlabs/prysm/v4/beacon-chain/blockchain/kzg"
 	"github.com/prysmaticlabs/prysm/v4/beacon-chain/cache"
 	"github.com/prysmaticlabs/prysm/v4/beacon-chain/cache/depositcache"
 	"github.com/prysmaticlabs/prysm/v4/beacon-chain/core/feed"
@@ -92,6 +93,10 @@ var ErrMissingClockSetter = errors.New("blockchain Service initialized without a
 // NewService instantiates a new block service instance that will
 // be registered into a running beacon node.
 func NewService(ctx context.Context, opts ...Option) (*Service, error) {
+	err := kzg.Start()
+	if err != nil {
+		return nil, errors.Wrap(err, "could not initialize go-kzg context")
+	}
 	ctx, cancel := context.WithCancel(ctx)
 	srv := &Service{
 		ctx:                  ctx,
@@ -109,7 +114,6 @@ func NewService(ctx context.Context, opts ...Option) (*Service, error) {
 	if srv.clockSetter == nil {
 		return nil, ErrMissingClockSetter
 	}
-	var err error
 	srv.wsVerifier, err = NewWeakSubjectivityVerifier(srv.cfg.WeakSubjectivityCheckpt, srv.cfg.BeaconDB)
 	if err != nil {
 		return nil, err
